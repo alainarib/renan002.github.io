@@ -22,6 +22,7 @@ const Dashboard = () => {
   const today = useMemo(() => startOfDay(new Date()), []);
   const [selectedDate, setSelectedDate] = useState<Date>(today);
   const [duration, setDuration] = useState<DurationOption>(professional?.duracaoPadrao ?? "60");
+  const [expandedBriefings, setExpandedBriefings] = useState<Record<string, boolean>>({});
 
   const events = useMemo(() => {
     if (!professional) {
@@ -29,6 +30,9 @@ const Dashboard = () => {
     }
     return getSchedulesForDate(professional.id, selectedDate);
   }, [professional, selectedDate]);
+
+  const handleToggleBriefing = (eventId: string) =>
+    setExpandedBriefings((previous) => ({ ...previous, [eventId]: !previous[eventId] }));
 
   if (!professional) {
     return null;
@@ -63,23 +67,76 @@ const Dashboard = () => {
               <p className="text-sm text-muted-foreground">Nenhum compromisso agendado para esta data.</p>
             ) : (
               <ul className="space-y-4">
-                {events.map((event) => (
-                  <li
-                    key={event.id}
-                    className="flex items-start justify-between gap-4 rounded-lg border border-border/70 bg-background/80 p-4"
-                  >
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <Badge variant="secondary" className="text-xs font-semibold uppercase">
-                          {formatTimeRange(event.inicio, event.duracao)}
-                        </Badge>
-                        <span className="text-xs text-muted-foreground">{event.local}</span>
+                {events.map((event) => {
+                  const isExpanded = expandedBriefings[event.id];
+                  return (
+                    <li
+                      key={event.id}
+                      className="rounded-lg border border-border/70 bg-background/80 p-4"
+                    >
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <Badge variant="secondary" className="text-xs font-semibold uppercase">
+                            {formatTimeRange(event.inicio, event.duracao)}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">{event.local}</span>
+                        </div>
+                        <p className="text-sm font-semibold text-foreground">{event.titulo}</p>
+                        <p className="text-sm text-muted-foreground">Cliente: {event.cliente}</p>
                       </div>
-                      <p className="text-sm font-semibold text-foreground">{event.titulo}</p>
-                      <p className="text-sm text-muted-foreground">Cliente: {event.cliente}</p>
-                    </div>
-                  </li>
-                ))}
+
+                      {event.briefingSummary && (
+                        <div className="mt-4 rounded-lg border border-border/50 bg-card/70 p-4">
+                          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                            <div className="space-y-1">
+                              <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                                Resumo assistido por IA
+                              </p>
+                              <p className="text-sm text-foreground">{event.briefingSummary}</p>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              className="self-start whitespace-nowrap"
+                              aria-expanded={isExpanded}
+                              onClick={() => handleToggleBriefing(event.id)}
+                            >
+                              {isExpanded ? "Ocultar perguntas" : "Ver perguntas"}
+                            </Button>
+                          </div>
+
+                          {isExpanded && (
+                            <dl className="mt-4 space-y-3 text-sm text-muted-foreground">
+                              <div>
+                                <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                                  Área do direito
+                                </dt>
+                                <dd className="text-foreground">{event.briefingAnswers?.areaDoDireito ?? "Cliente não informou."}</dd>
+                              </div>
+                              <div>
+                                <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                                  Objetivo da consulta
+                                </dt>
+                                <dd className="text-foreground">
+                                  {event.briefingAnswers?.objetivoDaConsulta ?? "Sem objetivo descrito."}
+                                </dd>
+                              </div>
+                              <div>
+                                <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                                  Detalhes e prazos
+                                </dt>
+                                <dd className="text-foreground">
+                                  {event.briefingAnswers?.detalhesDoCaso ?? "Sem detalhes adicionais enviados."}
+                                </dd>
+                              </div>
+                            </dl>
+                          )}
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>

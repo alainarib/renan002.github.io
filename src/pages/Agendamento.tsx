@@ -80,7 +80,7 @@ const Agendamento = () => {
       return;
     }
 
-    navigate("/confirmacao", {
+    navigate("/briefing", {
       state: {
         profissionalId: professional.id,
         data: selectedDate.toISOString(),
@@ -102,7 +102,7 @@ const Agendamento = () => {
               </Avatar>
               <div className="space-y-2">
                 <div className="space-y-1">
-                  <p className="text-sm uppercase tracking-wide text-primary">Você está agendando com</p>
+                  <p className="text-sm uppercase tracking-wide text-primary">Você está marcando com</p>
                   <h1 className="text-2xl font-bold text-foreground">{professional.nome}</h1>
                 </div>
                 <p className="text-muted-foreground">{professional.bio}</p>
@@ -127,7 +127,7 @@ const Agendamento = () => {
                     <span className="text-sm text-primary">{formatDatePtBR(selectedDate)}</span>
                   )}
                 </div>
-                <p className="text-sm text-muted-foreground">Escolha uma data disponível na agenda.</p>
+                <p className="text-sm text-muted-foreground">Escolha uma data disponível para o atendimento jurídico.</p>
               </div>
 
               <Calendar
@@ -197,7 +197,7 @@ const Agendamento = () => {
             <header className="space-y-2">
               <h2 className="text-xl font-semibold">Resumo rápido</h2>
               <p className="text-sm text-muted-foreground">
-                Enquanto você escolhe a data e horário, mostramos aqui um resumo do que será agendado.
+                Enquanto você escolhe a data e horário, veja aqui um resumo do atendimento requisitado.
               </p>
             </header>
 
@@ -248,7 +248,7 @@ const Agendamento = () => {
               </p>
             </div>
             <Button size="lg" className="gap-2" onClick={handleConfirm}>
-              Marcar
+              Responder briefing jurídico
               <span aria-hidden>→</span>
             </Button>
           </Card>
@@ -259,4 +259,3 @@ const Agendamento = () => {
 };
 
 export default Agendamento;
-

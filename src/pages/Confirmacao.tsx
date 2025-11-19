@@ -11,18 +11,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import {
   SUPPORTED_DURATIONS,
-  DurationOption,
   getProfessionalById,
   formatDatePtBR,
   formatTimeRange,
   DEFAULT_PROFESSIONAL_ID,
 } from "@/lib/scheduling";
+import type { LegalBriefingAnswers, SchedulingSelectionState } from "@/types/booking";
 
-type ConfirmationState = {
-  profissionalId?: string;
-  data: string;
-  horario: string;
-  duracao: DurationOption;
+type ConfirmationState = SchedulingSelectionState & {
+  briefing?: LegalBriefingAnswers;
 };
 
 const confirmationSchema = z.object({
@@ -64,6 +61,7 @@ const Confirmacao = () => {
       data: new Date(state.data),
       horario: state.horario,
       duracao: state.duracao,
+      briefing: state.briefing ?? null,
     };
   }, [state]);
 
@@ -100,6 +98,7 @@ const Confirmacao = () => {
       dataSelecionada: consulta.data.toISOString(),
       duracao: consulta.duracao,
       profissionalId: consulta.profissional.id,
+      briefing: consulta.briefing,
     };
 
     console.log("Dados enviados:", payload);
@@ -114,11 +113,11 @@ const Confirmacao = () => {
         <section>
           <Card className="space-y-6 border-border bg-card/85 p-6 shadow-card">
             <header className="space-y-3">
-              <p className="text-sm uppercase tracking-wide text-primary">Resumo da sessão</p>
+              <p className="text-sm uppercase tracking-wide text-primary">Resumo da consulta</p>
               <div className="space-y-1">
-                <h1 className="text-2xl font-bold text-foreground">Confirme seu agendamento</h1>
+                <h1 className="text-2xl font-bold text-foreground">Confirme o atendimento jurídico</h1>
                 <p className="text-sm text-muted-foreground">
-                  Confira abaixo os detalhes antes de enviar seus dados.
+                  Confira os detalhes do horário e avance apenas se as informações estiverem corretas.
                 </p>
               </div>
             </header>
@@ -139,7 +138,7 @@ const Confirmacao = () => {
               <div>
                 <dt className="text-muted-foreground">Duração</dt>
                 <dd className="font-medium text-foreground">
-                  {SUPPORTED_DURATIONS[consulta.duracao as keyof typeof SUPPORTED_DURATIONS]}
+                  {SUPPORTED_DURATIONS[consulta.duracao]}
                 </dd>
               </div>
               <div>
@@ -147,6 +146,30 @@ const Confirmacao = () => {
                 <dd className="font-medium text-foreground">{consulta.profissional.endereco}</dd>
               </div>
             </dl>
+
+            <div className="rounded-xl border border-border/70 bg-background/70 p-4">
+              <h3 className="mb-3 text-base font-semibold text-foreground">Briefing preenchido</h3>
+              {consulta.briefing ? (
+                <dl className="space-y-3 text-sm">
+                  <div>
+                    <dt className="text-muted-foreground">Área do direito</dt>
+                    <dd className="font-medium text-foreground">{consulta.briefing.areaDoDireito}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted-foreground">Objetivo da consulta</dt>
+                    <dd className="font-medium text-foreground">{consulta.briefing.objetivoDaConsulta}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted-foreground">Detalhes e prazos</dt>
+                    <dd className="font-medium text-foreground">{consulta.briefing.detalhesDoCaso}</dd>
+                  </div>
+                </dl>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Não recebemos o briefing jurídico. Retorne para inserir as informações essenciais.
+                </p>
+              )}
+            </div>
           </Card>
         </section>
 
@@ -157,7 +180,7 @@ const Confirmacao = () => {
                 <div className="space-y-2">
                   <h2 className="text-xl font-semibold">Seus dados</h2>
                   <p className="text-sm text-muted-foreground">
-                    Informe seus dados de contato. Usaremos essas informações para confirmar o agendamento.
+                    Informe seus dados de contato. A equipe jurídica usará essas informações para confirmar o atendimento.
                   </p>
                 </div>
 
@@ -224,7 +247,7 @@ const Confirmacao = () => {
                         <div className="space-y-2">
                           <FormLabel className="text-sm font-medium text-foreground">Concordo com os termos</FormLabel>
                           <p className="text-xs text-muted-foreground">
-                            Confirmo que li e aceito os termos de uso e a política de privacidade do Agendaí.
+                            Confirmo que li e aceito os termos de uso e a política de privacidade do Juristy.
                           </p>
                           <FormMessage />
                         </div>
@@ -235,7 +258,7 @@ const Confirmacao = () => {
 
                 <div className="flex justify-end">
                   <Button type="submit" size="lg" disabled={!form.watch("termos") || form.formState.isSubmitting}>
-                    {form.formState.isSubmitting ? "Enviando..." : "Enviar"}
+                    {form.formState.isSubmitting ? "Enviando..." : "Confirmar consulta"}
                   </Button>
                 </div>
               </form>
@@ -248,4 +271,3 @@ const Confirmacao = () => {
 };
 
 export default Confirmacao;
-

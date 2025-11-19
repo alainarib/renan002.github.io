@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Agendamento from "./pages/Agendamento";
 import Confirmacao from "./pages/Confirmacao";
+import Briefing from "./pages/Briefing";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
@@ -29,6 +30,7 @@ const AppShell = () => (
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/agendar" element={<Agendamento />} />
+        <Route path="/briefing" element={<Briefing />} />
         <Route path="/confirmacao" element={<Confirmacao />} />
         <Route path="/login" element={<Login />} />
         <Route

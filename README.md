@@ -1,4 +1,6 @@
-# Welcome to your Lovable project
+# Juristy — Landing & Scheduling Flow
+
+Juristy é uma experiência de agendamento voltada para advogados e escritórios boutique. O fluxo demonstra como o cliente escolhe um horário, responde a um breve questionário jurídico e confirma os dados para o atendimento. A paleta utiliza tons de vinho e preto para reforçar a nova identidade do produto.
 
 ## Project info
 

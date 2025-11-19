@@ -1,5 +1,6 @@
 import { addDays, format, parseISO, startOfToday } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import type { LegalBriefingAnswers } from "@/types/booking";
 
 export type DurationOption = "30" | "60";
 
@@ -34,6 +35,8 @@ export type ScheduledEvent = {
   duracao: DurationOption;
   local?: string;
   cliente?: string;
+  briefingSummary?: string;
+  briefingAnswers?: LegalBriefingAnswers;
 };
 
 export const SUPPORTED_DURATIONS: Record<DurationOption, string> = {
@@ -53,15 +56,17 @@ const createEvent = (
   duracao: DurationOption,
   cliente: string,
   local = "Online",
-): ScheduledEvent => ({ id, titulo, inicio, duracao, cliente, local });
+  briefingSummary?: string,
+  briefingAnswers?: LegalBriefingAnswers,
+): ScheduledEvent => ({ id, titulo, inicio, duracao, cliente, local, briefingSummary, briefingAnswers });
 
 const PROFESSIONALS: ProfessionalProfile[] = [
   {
     id: "f4b3ad70-3d4a-4f1e-b613-35283b8b67f1",
-    nome: "Dra. Camila Nogueira",
-    email: "camila.nogueira@gmail.com",
-    bio: "Dermatologista especializada em rejuvenescimento facial e protocolos minimamente invasivos.",
-    endereco: "Rua Oscar Freire, 1120 • São Paulo/SP",
+    nome: "Dra. Lara Monteiro",
+    email: "lara.monteiro@juristy.com",
+    bio: "Advogada cível com foco em disputas empresariais e audiências estratégicas.",
+    endereco: "Av. Paulista, 1000 • São Paulo/SP",
     avatarUrl: "/placeholder.svg",
     duracaoPadrao: "60",
     availability: {
@@ -79,9 +84,9 @@ const PROFESSIONALS: ProfessionalProfile[] = [
   },
   {
     id: "0fbb9e8d-cc12-4b3c-8d80-8a93bd2c3ab4",
-    nome: "Coach Pedro Azevedo",
-    email: "pedro.azevedo@gmail.com",
-    bio: "Coach de carreira focado em transições para liderança e desenvolvimento de soft skills.",
+    nome: "Dr. Gustavo Prado",
+    email: "gustavo.prado@juristy.com",
+    bio: "Especialista em direito tributário e consultoria fiscal para scale-ups.",
     endereco: "Av. das Nações Unidas, 14261 • São Paulo/SP",
     avatarUrl: "/placeholder.svg",
     duracaoPadrao: "30",
@@ -99,9 +104,9 @@ const PROFESSIONALS: ProfessionalProfile[] = [
   },
   {
     id: "1d0339a9-95d0-4b6a-bf37-928b05c4c092",
-    nome: "Arq. Sofia Martins",
-    email: "sofia.martins@gmail.com",
-    bio: "Arquiteta especialista em interiores residenciais com foco em espaços funcionais e sustentáveis.",
+    nome: "Dra. Renata Salles",
+    email: "renata.salles@juristy.com",
+    bio: "Sócia de direito trabalhista com atuação em negociações coletivas e compliance.",
     endereco: "Rua Iaiá, 340 • São Paulo/SP",
     avatarUrl: "/placeholder.svg",
     duracaoPadrao: "60",
@@ -118,9 +123,9 @@ const PROFESSIONALS: ProfessionalProfile[] = [
   },
   {
     id: "3ab3b0f6-4e10-4cc2-9fd4-74f2bda1f5b1",
-    nome: "Chef Helena Paiva",
-    email: "helena.paiva@gmail.com",
-    bio: "Consultora gastronômica para restaurantes autorais e experiência culinária sazonal.",
+    nome: "Dr. Henrique Duarte",
+    email: "henrique.duarte@juristy.com",
+    bio: "Criminalista dedicado a compliance investigativo e gestão de crises sensíveis.",
     endereco: "Rua Borges Lagoa, 732 • São Paulo/SP",
     avatarUrl: "/placeholder.svg",
     duracaoPadrao: "30",
@@ -137,9 +142,9 @@ const PROFESSIONALS: ProfessionalProfile[] = [
   },
   {
     id: "58e46858-3f52-4a35-a95d-e7311b4234cf",
-    nome: "Dr. Vinícius Sampaio",
-    email: "vinicius.sampaio@gmail.com",
-    bio: "Fisioterapeuta esportivo com foco em reabilitação acelerada para atletas amadores.",
+    nome: "Dra. Beatriz Lima",
+    email: "beatriz.lima@juristy.com",
+    bio: "Especialista em proteção de dados e direito digital para empresas reguladas.",
     endereco: "Av. Brigadeiro Faria Lima, 3900 • São Paulo/SP",
     avatarUrl: "/placeholder.svg",
     duracaoPadrao: "60",
@@ -163,51 +168,298 @@ const DURATION_PRIORITY: DurationOption[] = ["60", "30"];
 const SCHEDULES: Record<string, Record<string, ScheduledEvent[]>> = {
   "f4b3ad70-3d4a-4f1e-b613-35283b8b67f1": {
     [createDateKey(0)]: [
-      createEvent("camila-1", "Consulta dermatológica", "09:00", "60", "Mariana Lopes"),
-      createEvent("camila-2", "Procedimento: peeling", "11:00", "60", "Carla Dias"),
-      createEvent("camila-3", "Retorno clínico", "16:00", "30", "Daniel Batista"),
+      createEvent(
+        "lara-1",
+        "Estratégia de contestação",
+        "09:00",
+        "60",
+        "Construtora Lírio",
+        "Online",
+        "Contestação envolve cláusula de reajuste e produção de prova técnica antes da audiência de 15/04.",
+        {
+          areaDoDireito: "Direito cível empresarial",
+          objetivoDaConsulta: "Planejar contestação a cobrança extra imposta pela contratante em aditivo recente.",
+          detalhesDoCaso: "Audiência marcada para 15/04; cliente possui laudos técnicos e precisa alinhar cronograma com perito.",
+        },
+      ),
+      createEvent(
+        "lara-2",
+        "Preparação de audiência",
+        "11:00",
+        "60",
+        "Tech&Co",
+        "Online",
+        "Startup quer alinhar depoimentos para audiência de tutela envolvendo cláusulas de vesting.",
+        {
+          areaDoDireito: "Societário e contratos",
+          objetivoDaConsulta: "Preparar diretoria para audiência que discute limitação de direitos do investidor.",
+          detalhesDoCaso: "Liminar atual restringe voto do investidor; audiência de instrução em 09/05.",
+        },
+      ),
+      createEvent(
+        "lara-3",
+        "Reunião com perito",
+        "16:00",
+        "30",
+        "Grupo Boreal",
+        "Online",
+        "Equipe precisa alinhar narrativa antes da perícia que analisará atrasos logísticos.",
+        {
+          areaDoDireito: "Processo civil",
+          objetivoDaConsulta: "Definir postura para reunião com perito sobre atraso na entrega de equipamentos.",
+          detalhesDoCaso: "Perícia em 20/04 em Guarulhos; cliente quer levar cronologia e e-mails que comprovam força maior.",
+        },
+      ),
     ],
     [createDateKey(1)]: [
-      createEvent("camila-4", "Avaliação inicial", "09:00", "60", "Evelyn Castro"),
-      createEvent("camila-5", "Consulta telemedicina", "14:30", "30", "Giovana Prado"),
+      createEvent(
+        "lara-4",
+        "Análise de documentos",
+        "09:00",
+        "60",
+        "Magna Foods",
+        "Online",
+        "Cliente precisa checklist dos documentos para contestar cobrança milionária de fornecedor.",
+        {
+          areaDoDireito: "Contencioso cível",
+          objetivoDaConsulta: "Rever documentos para contestar ação monitória de fornecedor estratégico.",
+          detalhesDoCaso: "Liminar autorizou bloqueio parcial; prazo para manifestação em 7 dias.",
+        },
+      ),
+      createEvent(
+        "lara-5",
+        "Follow-up pós-audiência",
+        "14:30",
+        "30",
+        "InovaLog",
+        "Online",
+        "Empresa quer avaliar proposta de acordo apresentada em audiência e sugerir contrapartidas.",
+        {
+          areaDoDireito: "Mediação empresarial",
+          objetivoDaConsulta: "Analisar minuta de acordo após audiência e definir limites de confidencialidade.",
+          detalhesDoCaso: "Parte contrária pede pagamento em 60 dias; cliente quer cláusulas de confidencialidade reforçadas.",
+        },
+      ),
     ],
   },
   "0fbb9e8d-cc12-4b3c-8d80-8a93bd2c3ab4": {
     [createDateKey(0)]: [
-      createEvent("pedro-1", "Mentoria: plano de carreira", "08:00", "60", "Lucas Farias"),
-      createEvent("pedro-2", "Sessão coaching executivo", "10:30", "60", "Bruna Freire"),
-      createEvent("pedro-3", "Feedback pós-promoção", "15:00", "30", "Henrique Souza"),
+      createEvent(
+        "gustavo-1",
+        "Planejamento tributário",
+        "08:00",
+        "60",
+        "Studio Lune",
+        "Online",
+        "Empresa quer validar uso de incentivo ISS para nova filial e entender contrapartidas exigidas.",
+        {
+          areaDoDireito: "Direito tributário",
+          objetivoDaConsulta: "Revisar planejamento tributário da filial que abrirá com incentivos municipais.",
+          detalhesDoCaso: "Prefeitura exige criação de 20 vagas e relatório até 30/04; cliente tem minutas de decreto.",
+        },
+      ),
+      createEvent(
+        "gustavo-2",
+        "Revisão de incentivos fiscais",
+        "10:30",
+        "60",
+        "Vorgan Tech",
+        "Online",
+        "Companhia quer confirmar uso de créditos de P&D antes de fiscalização federal.",
+        {
+          areaDoDireito: "Tributação federal",
+          objetivoDaConsulta: "Validar se créditos de inovação podem ser compensados no próximo trimestre.",
+          detalhesDoCaso: "Fiscalização da Receita ocorrerá em 05/05; notas fiscais e laudos estão anexados.",
+        },
+      ),
+      createEvent(
+        "gustavo-3",
+        "Consulta de compliance",
+        "15:00",
+        "30",
+        "Nexus Labs",
+        "Online",
+        "Startup quer parecer rápido sobre obrigações de integridade em contrato com autarquia estadual.",
+        {
+          areaDoDireito: "Compliance fiscal",
+          objetivoDaConsulta: "Avaliar requisitos de integridade para novo contrato público e definir cronograma de implantação.",
+          detalhesDoCaso: "Edital exige canal de denúncias e due diligence de terceiros; assinatura prevista em 20/04.",
+        },
+      ),
     ],
     [createDateKey(2)]: [
-      createEvent("pedro-4", "Workshop de liderança", "09:00", "60", "Time Nubia"),
+      createEvent(
+        "gustavo-4",
+        "Estruturação de holding",
+        "09:00",
+        "60",
+        "Família Ramos",
+        "Online",
+        "Família busca estrutura de holding para sucessão e proteção tributária dos imóveis.",
+        {
+          areaDoDireito: "Planejamento patrimonial",
+          objetivoDaConsulta: "Definir passos para criar holding familiar e reorganizar carteiras de imóveis.",
+          detalhesDoCaso: "Imóveis possuem usufruto vitalício; objetivo é reduzir ITCMD mantendo distribuição mensal.",
+        },
+      ),
     ],
   },
   "1d0339a9-95d0-4b6a-bf37-928b05c4c092": {
     [createDateKey(0)]: [
-      createEvent("sofia-1", "Reunião briefing apartamento", "10:00", "60", "Família Costa", "Escritório"),
-      createEvent("sofia-2", "Apresentação layout", "14:00", "60", "Camila Ramos", "Online"),
+      createEvent(
+        "renata-1",
+        "Negociação coletiva",
+        "10:00",
+        "60",
+        "Sindicato Têxtil",
+        "Escritório",
+        "Categoria busca roteiro para rodada final de negociação salarial mediada pelo TRT.",
+        {
+          areaDoDireito: "Direito trabalhista coletivo",
+          objetivoDaConsulta: "Montar argumentos para negociação salarial com sindicato patronal.",
+          detalhesDoCaso: "Proposta patronal de 4% é insuficiente; audiência de mediação em 18/04.",
+        },
+      ),
+      createEvent(
+        "renata-2",
+        "Due diligence trabalhista",
+        "14:00",
+        "60",
+        "Camila Ramos",
+        "Online",
+        "Equipe de M&A quer mapa de passivos antes de concluir incorporação.",
+        {
+          areaDoDireito: "Trabalhista empresarial",
+          objetivoDaConsulta: "Mapear contingências trabalhistas da empresa recém-adquirida.",
+          detalhesDoCaso: "Existem 45 ações em curso; cliente precisa matriz de risco até 25/04.",
+        },
+      ),
     ],
     [createDateKey(3)]: [
-      createEvent("sofia-3", "Visita técnica", "09:30", "60", "Obra Moema", "On-site"),
+      createEvent(
+        "renata-3",
+        "Treinamento compliance",
+        "09:30",
+        "60",
+        "Grupo Delta",
+        "On-site",
+        "Workshop deve atualizar gestores sobre novas rotinas e canal de denúncias.",
+        {
+          areaDoDireito: "Compliance trabalhista",
+          objetivoDaConsulta: "Preparar workshop para líderes sobre novas NR's e programa de integridade.",
+          detalhesDoCaso: "Auditoria interna ocorre em maio; equipe quer material com estudos de caso.",
+        },
+      ),
     ],
   },
   "3ab3b0f6-4e10-4cc2-9fd4-74f2bda1f5b1": {
     [createDateKey(0)]: [
-      createEvent("helena-1", "Revisão cardápio sazonal", "16:00", "60", "Rest. Casa Verde", "Restaurante"),
-      createEvent("helena-2", "Consultoria operação", "18:30", "30", "Bistrô Tartufo", "Online"),
+      createEvent(
+        "henrique-1",
+        "Plano de resposta a crise",
+        "16:00",
+        "60",
+        "Rest. Casa Verde",
+        "Restaurante",
+        "Restaurante teme operação policial e quer protocolo jurídico e de comunicação.",
+        {
+          areaDoDireito: "Direito penal empresarial",
+          objetivoDaConsulta: "Desenhar protocolo de resposta a investigação sobre suposta fraude fiscal.",
+          detalhesDoCaso: "MP sinalizou diligências para a próxima semana; cliente precisa alinhar porta-voz e documentos enviados.",
+        },
+      ),
+      createEvent(
+        "henrique-2",
+        "Consultoria investigativa",
+        "18:30",
+        "30",
+        "Bistrô Tartufo",
+        "Online",
+        "Comitê de ética quer revisar roteiro de entrevistas de investigação interna.",
+        {
+          areaDoDireito: "Compliance investigativo",
+          objetivoDaConsulta: "Validar abordagem de entrevistas em caso de assédio relatado por equipe.",
+          detalhesDoCaso: "Relatório final deve ser entregue em 22/04; depoimentos contraditórios já coletados.",
+        },
+      ),
     ],
     [createDateKey(4)]: [
-      createEvent("helena-3", "Treinamento de equipe", "15:00", "60", "Equipe La Cocina", "Restaurante"),
+      createEvent(
+        "henrique-3",
+        "Preparação de depoimento",
+        "15:00",
+        "60",
+        "Equipe La Cocina",
+        "Restaurante",
+        "Executivo precisa ser preparado para CPI sobre contratos de alimentação escolar.",
+        {
+          areaDoDireito: "Criminal/legislativo",
+          objetivoDaConsulta: "Treinar executivo para depoimento em CPI e definir limites de sigilo.",
+          detalhesDoCaso: "Audiência será em 28/04; cliente quer lista de respostas-chave e documentos permitidos.",
+        },
+      ),
     ],
   },
   "58e46858-3f52-4a35-a95d-e7311b4234cf": {
     [createDateKey(0)]: [
-      createEvent("vinicius-1", "Avaliação pós-lesão", "07:00", "60", "João Victor", "Clínica"),
-      createEvent("vinicius-2", "Sessão de reabilitação", "09:00", "60", "Amanda Silva", "Clínica"),
-      createEvent("vinicius-3", "Treino funcional", "15:00", "30", "Equipe RunSP", "Academia"),
+      createEvent(
+        "beatriz-1",
+        "Auditoria LGPD",
+        "07:00",
+        "60",
+        "João Victor",
+        "Clínica",
+        "Clínica quer revisar consentimento no app de telemedicina antes de resposta à ANS.",
+        {
+          areaDoDireito: "Proteção de dados",
+          objetivoDaConsulta: "Analisar políticas de consentimento e mapa de dados sensíveis do app.",
+          detalhesDoCaso: "ANS solicitou esclarecimentos até 17/04; cliente tem logs e termos atualizados.",
+        },
+      ),
+      createEvent(
+        "beatriz-2",
+        "Adequação de contratos",
+        "09:00",
+        "60",
+        "Amanda Silva",
+        "Clínica",
+        "Rede de parceiros precisa atualizar cláusulas LGPD antes do novo ciclo comercial.",
+        {
+          areaDoDireito: "Direito digital",
+          objetivoDaConsulta: "Atualizar contratos com clínicas parceiras incluindo obrigações de processamento.",
+          detalhesDoCaso: "Contrato padrão expira em junho; incluir cláusula de subcontratação e SLA de resposta.",
+        },
+      ),
+      createEvent(
+        "beatriz-3",
+        "Assessoria preventiva",
+        "15:00",
+        "30",
+        "Equipe RunSP",
+        "Academia",
+        "Clube esportivo investiga tentativa de phishing e quer orientação de comunicação.",
+        {
+          areaDoDireito: "Segurança da informação",
+          objetivoDaConsulta: "Orientar sobre resposta ao incidente e eventual notificação à ANPD.",
+          detalhesDoCaso: "E-mails comprometidos em 02/04; sem vazamento confirmado; avaliar se notifica atletas.",
+        },
+      ),
     ],
     [createDateKey(5)]: [
-      createEvent("vinicius-4", "Acompanhamento semanal", "09:00", "60", "Pedro Lourenço", "Clínica"),
+      createEvent(
+        "beatriz-4",
+        "Análise de incidente",
+        "09:00",
+        "60",
+        "Pedro Lourenço",
+        "Clínica",
+        "Empresa sofreu vazamento em backup e precisa mapear obrigações de reporte.",
+        {
+          areaDoDireito: "Privacidade e incidentes",
+          objetivoDaConsulta: "Delimitar escopo do incidente e definir comunicações obrigatórias.",
+          detalhesDoCaso: "Backup ficou exposto por 4 horas com CPF e endereço; cliente isolou servidor e quer parecer imediato.",
+        },
+      ),
     ],
   },
 };
@@ -342,4 +594,3 @@ export const authenticateProfessional = (email: string, password: string) => {
 
   return profile;
 };
-

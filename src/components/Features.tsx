@@ -1,36 +1,36 @@
-import { Calendar, Clock, Smartphone, TrendingUp, Users, Zap } from "lucide-react";
+import { Calendar, Clock, FileText, Smartphone, TrendingUp, Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 const features = [
   {
     icon: Calendar,
-    title: "Agenda Inteligente",
-    description: "Visualize todos os seus compromissos em um só lugar com interface limpa e intuitiva.",
+    title: "Agenda jurídica inteligente",
+    description: "Visualize audiências, reuniões e prazos em uma linha do tempo clara pensada para escritórios boutique.",
   },
   {
-    icon: Zap,
-    title: "Configuração Rápida",
-    description: "Comece a usar em minutos. Sem instalações complicadas ou treinamentos longos.",
+    icon: FileText,
+    title: "Triagem automatizada",
+    description: "Questionários rápidos coletam área do direito, objetivo e contexto antes da consulta inicial.",
   },
   {
     icon: Smartphone,
-    title: "Acesso Anywhere",
-    description: "Use em qualquer dispositivo. Desktop, tablet ou celular. Seus dados sempre sincronizados.",
+    title: "Experiência omnicanal",
+    description: "Compartilhe o link de agendamento por WhatsApp, e-mail ou site e receba tudo centralizado.",
   },
   {
     icon: Clock,
-    title: "Lembretes Automáticos",
-    description: "Nunca mais perca um compromisso. Receba notificações inteligentes no momento certo.",
+    title: "Controle de prazos",
+    description: "Alertas configuráveis para compromissos críticos e bloqueio automático de conflitos na agenda.",
   },
   {
     icon: Users,
-    title: "Gestão de Clientes",
-    description: "Mantenha informações dos clientes organizadas e acesse rapidamente quando precisar.",
+    title: "Central de clientes",
+    description: "Histórico completo de interações e consultas em um mesmo lugar para toda a equipe.",
   },
   {
     icon: TrendingUp,
-    title: "Relatórios Simples",
-    description: "Acompanhe seu desempenho com relatórios claros sobre agendamentos e produtividade.",
+    title: "Indicadores claros",
+    description: "Acompanhe taxa de conversão de consultas, principais áreas atendidas e gargalos da operação.",
   },
 ];
 
@@ -40,13 +40,13 @@ const Features = () => {
       <div className="container mx-auto px-4">
         <div className="mx-auto mb-16 max-w-3xl text-center">
           <h2 className="mb-4 text-3xl font-bold tracking-tight lg:text-5xl">
-            Tudo que você precisa para{" "}
+            Infraestrutura moderna para{" "}
             <span className="bg-gradient-primary bg-clip-text text-transparent">
-              organizar seu tempo
+              escritórios jurídicos ágeis
             </span>
           </h2>
           <p className="text-lg text-muted-foreground">
-            Ferramentas poderosas mas simples de usar, feitas especialmente para profissionais autônomos.
+            Ferramentas desenhadas para advogados que precisam conciliar atendimento, prazos e relacionamento com clientes.
           </p>
         </div>
         

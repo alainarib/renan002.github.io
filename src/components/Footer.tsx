@@ -5,10 +5,10 @@ const Footer = () => {
         <div className="grid gap-8 md:grid-cols-4">
           <div className="space-y-4">
             <h3 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              Agendaí
+              Juristy
             </h3>
             <p className="text-sm text-muted-foreground">
-              Controle total da sua agenda com facilidade.
+              Agenda inteligente e triagem jurídica para escritórios e advogados independentes.
             </p>
           </div>
           
@@ -40,7 +40,7 @@ const Footer = () => {
         </div>
         
         <div className="mt-12 border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} Agendaí. Todos os direitos reservados.</p>
+          <p>© {new Date().getFullYear()} Juristy. Todos os direitos reservados.</p>
         </div>
       </div>
     </footer>
