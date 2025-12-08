@@ -4,7 +4,7 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid gap-8 md:grid-cols-4">
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+            <h3 className="text-2xl font-bold gradient-text">
               Juristy
             </h3>
             <p className="text-sm text-muted-foreground">

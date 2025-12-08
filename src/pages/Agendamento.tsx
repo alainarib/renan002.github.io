@@ -3,11 +3,13 @@ import { ptBR } from "date-fns/locale";
 import { isSameDay } from "date-fns";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
+import LoadingState from "@/components/LoadingState";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { useFakeFetch } from "@/hooks/use-fake-fetch";
 import {
   DEFAULT_PROFESSIONAL,
   SUPPORTED_DURATIONS,
@@ -41,6 +43,14 @@ const Agendamento = () => {
     () => getAvailableSlots(professional.id, duration, selectedDate),
     [professional.id, duration, selectedDate],
   );
+  const isLoadingProfessional = useFakeFetch({
+    dependencies: [professional.id],
+    delay: 900,
+  });
+  const isLoadingSlots = useFakeFetch({
+    dependencies: [professional.id, duration, selectedDate ? selectedDate.toISOString() : "no-date"],
+    delay: 750,
+  });
 
   useEffect(() => {
     if (!availableDates.length) {
@@ -95,100 +105,108 @@ const Agendamento = () => {
       <div className="container mx-auto grid gap-8 px-4 py-12 lg:grid-cols-[1.1fr_1fr] lg:py-16">
         <section>
           <Card className="space-y-8 border-border bg-card/80 p-6 shadow-card">
-            <header className="flex items-start gap-4">
-              <Avatar className="h-16 w-16">
-                <AvatarImage src={professional.avatarUrl} alt={professional.nome} />
-                <AvatarFallback>{professional.nome.slice(0, 2).toUpperCase()}</AvatarFallback>
-              </Avatar>
-              <div className="space-y-2">
-                <div className="space-y-1">
-                  <p className="text-sm uppercase tracking-wide text-primary">Você está marcando com</p>
-                  <h1 className="text-2xl font-bold text-foreground">{professional.nome}</h1>
-                </div>
-                <p className="text-muted-foreground">{professional.bio}</p>
-                <dl className="grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <dt className="text-xs uppercase text-muted-foreground">Duração padrão</dt>
-                    <dd className="text-sm font-medium text-foreground">{SUPPORTED_DURATIONS[duration]}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-xs uppercase text-muted-foreground">Endereço</dt>
-                    <dd className="text-sm font-medium text-foreground">{professional.endereco}</dd>
-                  </div>
-                </dl>
-              </div>
-            </header>
-
-            <section className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-semibold">Selecione um dia</h2>
-                  {selectedDate && (
-                    <span className="text-sm text-primary">{formatDatePtBR(selectedDate)}</span>
-                  )}
-                </div>
-                <p className="text-sm text-muted-foreground">Escolha uma data disponível para o atendimento jurídico.</p>
-              </div>
-
-              <Calendar
-                mode="single"
-                locale={ptBR}
-                selected={selectedDate}
-                onSelect={handleDaySelect}
-                weekStartsOn={0}
-                showOutsideDays={false}
-                disabled={(date) => date.getDay() === 0 || date.getDay() === 6 || !availableDates.some((availableDay) => isSameDay(availableDay, date))}
-                modifiers={{ selected: selectedDate ? (day) => isSameDay(day, selectedDate) : undefined }}
+            {isLoadingProfessional ? (
+              <LoadingState
+                className="min-h-[420px]"
+                message="Sincronizando disponibilidade do profissional..."
               />
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-lg font-semibold">Horários disponíveis</h2>
-              {selectedDate ? (
-                availableSlots.length > 0 ? (
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {availableSlots.map((slot) => (
-                      <button
-                        key={slot.value}
-                        type="button"
-                        onClick={() => {
-                          if (!slot.disabled) {
-                            setSelectedSlot(slot.value);
-                          }
-                        }}
-                        className={cn(
-                          "rounded-lg border border-border px-4 py-3 text-left text-sm font-medium transition-colors",
-                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                          slot.disabled
-                            ? "cursor-not-allowed bg-muted/30 text-muted-foreground"
-                            : "bg-background hover:border-primary hover:text-primary",
-                          isSelected(slot.value) && !slot.disabled && "border-primary bg-primary/10 text-primary",
-                        )}
-                        disabled={slot.disabled}
-                      >
-                        <span>{slot.value}</span>
-                        <span
-                          className={cn(
-                            "block text-xs font-normal",
-                            slot.disabled ? "text-muted-foreground" : "text-muted-foreground",
-                          )}
-                        >
-                          {slot.disabled
-                            ? "Indisponível"
-                            : formatTimeRange(slot.value, duration)}
-                        </span>
-                      </button>
-                    ))}
+            ) : (
+              <>
+                <header className="flex items-start gap-4">
+                  <Avatar className="h-16 w-16">
+                    <AvatarImage src={professional.avatarUrl} alt={professional.nome} />
+                    <AvatarFallback>{professional.nome.slice(0, 2).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <div className="space-y-2">
+                    <div className="space-y-1">
+                      <p className="text-sm uppercase tracking-wide text-primary">Você está marcando com</p>
+                      <h1 className="text-2xl font-bold text-foreground">{professional.nome}</h1>
+                    </div>
+                    <p className="text-muted-foreground">{professional.bio}</p>
+                    <dl className="grid gap-3 sm:grid-cols-2">
+                      <div>
+                        <dt className="text-xs uppercase text-muted-foreground">Duração padrão</dt>
+                        <dd className="text-sm font-medium text-foreground">{SUPPORTED_DURATIONS[duration]}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs uppercase text-muted-foreground">Endereço</dt>
+                        <dd className="text-sm font-medium text-foreground">{professional.endereco}</dd>
+                      </div>
+                    </dl>
                   </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground">
-                    Nenhum horário disponível para este dia. Escolha outra data.
-                  </p>
-                )
-              ) : (
-                <p className="text-sm text-muted-foreground">Selecione um dia para ver os horários disponíveis.</p>
-              )}
-            </section>
+                </header>
+
+                <section className="space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-lg font-semibold">Selecione um dia</h2>
+                      {selectedDate && (
+                        <span className="text-sm text-primary">{formatDatePtBR(selectedDate)}</span>
+                      )}
+                    </div>
+                    <p className="text-sm text-muted-foreground">Escolha uma data disponível para o atendimento jurídico.</p>
+                  </div>
+
+                  <Calendar
+                    mode="single"
+                    locale={ptBR}
+                    selected={selectedDate}
+                    onSelect={handleDaySelect}
+                    weekStartsOn={0}
+                    showOutsideDays={false}
+                    disabled={(date) => date.getDay() === 0 || date.getDay() === 6 || !availableDates.some((availableDay) => isSameDay(availableDay, date))}
+                    modifiers={{ selected: selectedDate ? (day) => isSameDay(day, selectedDate) : undefined }}
+                  />
+                </section>
+
+                <section className="space-y-4">
+                  <h2 className="text-lg font-semibold">Horários disponíveis</h2>
+                  {isLoadingSlots ? (
+                    <LoadingState
+                      compact
+                      className="rounded-lg border border-dashed border-border bg-background/80 px-4"
+                      message="Buscando horários disponíveis..."
+                    />
+                  ) : selectedDate ? (
+                    availableSlots.length > 0 ? (
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        {availableSlots.map((slot) => (
+                          <button
+                            key={slot.value}
+                            type="button"
+                            onClick={() => {
+                              if (!slot.disabled) {
+                                setSelectedSlot(slot.value);
+                              }
+                            }}
+                            className={cn(
+                              "rounded-lg border border-border px-4 py-3 text-left text-sm font-medium transition-colors",
+                              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                              slot.disabled
+                                ? "cursor-not-allowed bg-muted/30 text-muted-foreground"
+                                : "bg-background hover:border-primary hover:text-primary",
+                              isSelected(slot.value) && !slot.disabled && "border-primary bg-primary/10 text-primary",
+                            )}
+                            disabled={slot.disabled}
+                          >
+                            <span>{slot.value}</span>
+                            <span className="block text-xs font-normal text-muted-foreground">
+                              {slot.disabled ? "Indisponível" : formatTimeRange(slot.value, duration)}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">
+                        Nenhum horário disponível para este dia. Escolha outra data.
+                      </p>
+                    )
+                  ) : (
+                    <p className="text-sm text-muted-foreground">Selecione um dia para ver os horários disponíveis.</p>
+                  )}
+                </section>
+              </>
+            )}
           </Card>
         </section>
 

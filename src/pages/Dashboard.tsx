@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { ptBR } from "date-fns/locale";
 import { startOfDay } from "date-fns";
+import LoadingState from "@/components/LoadingState";
 import { Calendar } from "@/components/ui/calendar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/context/AuthContext";
+import { useFakeFetch } from "@/hooks/use-fake-fetch";
 import {
   SUPPORTED_DURATIONS,
   DurationOption,
@@ -30,6 +32,14 @@ const Dashboard = () => {
     }
     return getSchedulesForDate(professional.id, selectedDate);
   }, [professional, selectedDate]);
+  const isLoadingAgenda = useFakeFetch({
+    dependencies: [professional?.id ?? "guest", selectedDate.toISOString()],
+    delay: 850,
+  });
+  const isGeneratingLink = useFakeFetch({
+    dependencies: [professional?.id ?? "guest", duration],
+    delay: 650,
+  });
 
   const handleToggleBriefing = (eventId: string) =>
     setExpandedBriefings((previous) => ({ ...previous, [eventId]: !previous[eventId] }));
@@ -63,7 +73,9 @@ const Dashboard = () => {
           </header>
           <Separator />
           <div className="space-y-4">
-            {events.length === 0 ? (
+            {isLoadingAgenda ? (
+              <LoadingState message="Sincronizando compromissos do dia..." />
+            ) : events.length === 0 ? (
               <p className="text-sm text-muted-foreground">Nenhum compromisso agendado para esta data.</p>
             ) : (
               <ul className="space-y-4">
@@ -196,10 +208,21 @@ const Dashboard = () => {
               </Select>
             </div>
             <div className="rounded-lg border border-dashed border-border bg-background/80 p-4">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Link gerado</p>
-              <p className="break-all text-sm font-semibold text-primary">{generatedUrl}</p>
+              {isGeneratingLink ? (
+                <LoadingState compact className="px-2" message="Gerando link seguro..." />
+              ) : (
+                <>
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Link gerado</p>
+                  <p className="break-all text-sm font-semibold text-primary">{generatedUrl}</p>
+                </>
+              )}
             </div>
-            <Button type="button" className="w-full" onClick={() => navigator.clipboard.writeText(generatedUrl)}>
+            <Button
+              type="button"
+              className="w-full"
+              disabled={isGeneratingLink}
+              onClick={() => navigator.clipboard.writeText(generatedUrl)}
+            >
               Copiar link
             </Button>
           </Card>

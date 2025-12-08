@@ -41,7 +41,7 @@ const Features = () => {
         <div className="mx-auto mb-16 max-w-3xl text-center">
           <h2 className="mb-4 text-3xl font-bold tracking-tight lg:text-5xl">
             Infraestrutura moderna para{" "}
-            <span className="bg-gradient-primary bg-clip-text text-transparent">
+            <span className="gradient-text">
               escritórios jurídicos ágeis
             </span>
           </h2>

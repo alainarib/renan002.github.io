@@ -11,7 +11,7 @@ const CTA = () => {
           <div className="text-center">
             <h2 className="mb-4 text-3xl font-bold tracking-tight lg:text-5xl">
               Entregue uma experiência{" "}
-              <span className="bg-gradient-primary bg-clip-text text-transparent">
+              <span className="gradient-text">
                 jurídica impecável
               </span>{" "}
               desde o primeiro contato

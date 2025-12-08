@@ -64,7 +64,7 @@ const PROFESSIONALS: ProfessionalProfile[] = [
   {
     id: "f4b3ad70-3d4a-4f1e-b613-35283b8b67f1",
     nome: "Dra. Lara Monteiro",
-    email: "lara.monteiro@juristy.com",
+    email: "lara.monteiro@gmail.com",
     bio: "Advogada cível com foco em disputas empresariais e audiências estratégicas.",
     endereco: "Av. Paulista, 1000 • São Paulo/SP",
     avatarUrl: "/placeholder.svg",
@@ -85,7 +85,7 @@ const PROFESSIONALS: ProfessionalProfile[] = [
   {
     id: "0fbb9e8d-cc12-4b3c-8d80-8a93bd2c3ab4",
     nome: "Dr. Gustavo Prado",
-    email: "gustavo.prado@juristy.com",
+    email: "gustavo.prado@gmail.com",
     bio: "Especialista em direito tributário e consultoria fiscal para scale-ups.",
     endereco: "Av. das Nações Unidas, 14261 • São Paulo/SP",
     avatarUrl: "/placeholder.svg",
@@ -105,7 +105,7 @@ const PROFESSIONALS: ProfessionalProfile[] = [
   {
     id: "1d0339a9-95d0-4b6a-bf37-928b05c4c092",
     nome: "Dra. Renata Salles",
-    email: "renata.salles@juristy.com",
+    email: "renata.salles@gmail.com",
     bio: "Sócia de direito trabalhista com atuação em negociações coletivas e compliance.",
     endereco: "Rua Iaiá, 340 • São Paulo/SP",
     avatarUrl: "/placeholder.svg",
@@ -124,7 +124,7 @@ const PROFESSIONALS: ProfessionalProfile[] = [
   {
     id: "3ab3b0f6-4e10-4cc2-9fd4-74f2bda1f5b1",
     nome: "Dr. Henrique Duarte",
-    email: "henrique.duarte@juristy.com",
+    email: "henrique.duarte@gmail.com",
     bio: "Criminalista dedicado a compliance investigativo e gestão de crises sensíveis.",
     endereco: "Rua Borges Lagoa, 732 • São Paulo/SP",
     avatarUrl: "/placeholder.svg",
@@ -143,7 +143,7 @@ const PROFESSIONALS: ProfessionalProfile[] = [
   {
     id: "58e46858-3f52-4a35-a95d-e7311b4234cf",
     nome: "Dra. Beatriz Lima",
-    email: "beatriz.lima@juristy.com",
+    email: "beatriz.lima@gmail.com",
     bio: "Especialista em proteção de dados e direito digital para empresas reguladas.",
     endereco: "Av. Brigadeiro Faria Lima, 3900 • São Paulo/SP",
     avatarUrl: "/placeholder.svg",

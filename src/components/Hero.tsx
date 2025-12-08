@@ -16,7 +16,7 @@ const Hero = () => {
             
             <h1 className="text-4xl font-bold leading-tight tracking-tight lg:text-6xl">
               A agenda jurídica que{" "}
-              <span className="bg-gradient-primary bg-clip-text text-transparent">chega com contexto</span>
+              <span className="gradient-text">chega com contexto</span>
               {" "}antes de cada consulta
             </h1>
             

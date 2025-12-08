@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import GoogleButton from "react-google-button";
+import LoadingState from "@/components/LoadingState";
 import { useAuth } from "@/context/AuthContext";
+import { useFakeFetch } from "@/hooks/use-fake-fetch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 const Login = () => {
   const navigate = useNavigate();
   const { login, isAuthenticating, professionals } = useAuth();
+  const isLoadingCredentials = useFakeFetch({ delay: 800 });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +50,7 @@ const Login = () => {
                   id="email"
                   type="email"
                   autoComplete="email"
-                  placeholder="advogado@juristy.com"
+                  placeholder="advogado@gmail.com"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   required
@@ -106,15 +109,19 @@ const Login = () => {
 
             <div className="rounded-lg border border-border bg-background/50 p-4">
               <h2 className="mb-2 text-sm font-semibold text-foreground">Credenciais de demonstração</h2>
-              <ul className="space-y-2 text-xs text-muted-foreground">
-                {professionals.map((professional) => (
-                  <li key={professional.id} className="flex items-center justify-between gap-2">
-                    <span className="font-medium text-foreground">{professional.nome}</span>
-                    <span className="rounded bg-muted/70 px-2 py-1 font-mono text-xs text-foreground/80">{professional.email}</span>
-                    <span className="rounded bg-muted/70 px-2 py-1 font-mono text-xs text-foreground/80">123456</span>
-                  </li>
-                ))}
-              </ul>
+              {isLoadingCredentials ? (
+                <LoadingState compact className="rounded-md border border-dashed border-border/80 bg-muted/20 px-4" message="Carregando acessos..." />
+              ) : (
+                <ul className="space-y-2 text-xs text-muted-foreground">
+                  {professionals.map((professional) => (
+                    <li key={professional.id} className="flex items-center justify-between gap-2">
+                      <span className="font-medium text-foreground">{professional.nome}</span>
+                      <span className="rounded bg-muted/70 px-2 py-1 font-mono text-xs text-foreground/80">{professional.email}</span>
+                      <span className="rounded bg-muted/70 px-2 py-1 font-mono text-xs text-foreground/80">123456</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </section>
